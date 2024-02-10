@@ -54,7 +54,7 @@ class Free {
   int? id;
   String? imageNameF;
   String? name;
-  Null? price;
+  double? price;
   String? publisherName;
   String? state;
   bool? status;
@@ -123,7 +123,7 @@ class Premium {
   String? imageNameF;
   String? language;
   String? name;
-  int? price;
+  double? price;
   String? publisherName;
   String? state;
   bool? status;

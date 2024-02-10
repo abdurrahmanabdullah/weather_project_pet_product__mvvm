@@ -18,7 +18,7 @@ class _PremiumBookState extends State<PremiumBook> {
   List<Premium?> premiumBook = [];
   List<String> premiumBookCategoriesList = [];
   bool isDetailsBookFunctionCalled = false;
-  bool IsDisplayGenre = false;
+  bool isDisplayGenre = false;
   @override
   Widget build(BuildContext context) {
     return BaseView<BookViewModel>(
@@ -107,29 +107,42 @@ class _PremiumBookState extends State<PremiumBook> {
             ),
 
             ///=====check if detailsbookFunction is called and isdisplayGenre is not true
-            if (isDetailsBookFunctionCalled && IsDisplayGenre != true)
+            if (isDetailsBookFunctionCalled && isDisplayGenre != true)
+              //////////////////
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Column(
                     children: [
                       if (displayImage.isNotEmpty)
-                        Image.network(
-                          displayImage,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            }
-                            return const CircularProgressIndicator();
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Text('Error loading image');
-                          },
+                        // if (displayImage.isNotEmpty)
+                        Card(
+                          child: Column(
+                            children: [
+                              Image.network(
+                                displayImage,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return const CircularProgressIndicator();
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Text('Error loading image');
+                                },
+                                width: 200,
+                                height: 200,
+                              ),
+                              Text(
+                                'Price ${displayPrice.toString()}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
-                      Text(
-                        'Price ${displayPrice.toString()}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
                       const SizedBox(
                         height: 15,
                       ),
@@ -147,58 +160,162 @@ class _PremiumBookState extends State<PremiumBook> {
                           try {
                             await launch(playStoreUrl);
                           } catch (error) {
-                            print('Error launching URL: $error');
+                            // print('Error launching URL: $error');
                           }
                         },
                         child: const Text('Read More'),
                       ),
                     ],
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        displayName,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text('Author: $displayAuthor'),
-                      Text('Category: $category'),
-                      const Text(
-                        'Genre :',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Column(
+                  Expanded(
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
+                          Text(
+                            displayName,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text('Author: $displayAuthor'),
+                          Text('Category: $category'),
+                          const Text(
+                            'Genre :',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Column(
                             children: [
-                              for (int i = 0;
-                                  i < premiumBookCategoriesList.length;
-                                  i++)
-                                InkWell(
-                                  borderRadius: BorderRadius.circular(25),
-                                  splashColor: Colors.blue,
-                                  onTap: () {
-                                    displayGenre(i);
-                                    // print(premiumBookCategoriesList[i]);
-                                  },
-                                  child: Text(
-                                    '${premiumBookCategoriesList[i]}    ',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
+                              Column(children: [
+                                for (int i = 0;
+                                    i < premiumBookCategoriesList.length;
+                                    i++)
+                                  InkWell(
+                                    borderRadius: BorderRadius.circular(25),
+                                    splashColor: Colors.blue,
+                                    onTap: () {
+                                      displayGenre(i);
+                                      // print(premiumBookCategoriesList[i]);
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black12,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        '${premiumBookCategoriesList[i]}    ',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                              ]),
                             ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ],
               )
-            else if (IsDisplayGenre == true)
+
+            ///
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //   children: [
+            //     Column(
+            //       children: [
+            //         if (displayImage.isNotEmpty)
+            //           Image.network(
+            //             displayImage,
+            //             loadingBuilder: (context, child, loadingProgress) {
+            //               if (loadingProgress == null) {
+            //                 return child;
+            //               }
+            //               return const CircularProgressIndicator();
+            //             },
+            //             errorBuilder: (context, error, stackTrace) {
+            //               return const Text('Error loading image');
+            //             },
+            //           ),
+            //         Text(
+            //           'Price ${displayPrice.toString()}',
+            //           style: const TextStyle(fontWeight: FontWeight.bold),
+            //         ),
+            //         const SizedBox(
+            //           height: 15,
+            //         ),
+            //         ElevatedButton(
+            //           style: ElevatedButton.styleFrom(
+            //             backgroundColor: Colors.black,
+            //             textStyle: const TextStyle(
+            //               fontSize: 15,
+            //               fontWeight: FontWeight.bold,
+            //             ),
+            //           ),
+            //           onPressed: () async {
+            //             const playStoreUrl =
+            //                 'https://play.google.com/store/apps/details?id=com.example.weather_project_mvvm';
+            //             try {
+            //               await launch(playStoreUrl);
+            //             } catch (error) {
+            //               print('Error launching URL: $error');
+            //             }
+            //           },
+            //           child: const Text('Read More'),
+            //         ),
+            //       ],
+            //     ),
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Text(
+            //           displayName,
+            //           style: const TextStyle(fontWeight: FontWeight.bold),
+            //         ),
+            //         const SizedBox(
+            //           height: 10,
+            //         ),
+            //         Text('Author: $displayAuthor'),
+            //         Text('Category: $category'),
+            //         const Text(
+            //           'Genre :',
+            //           style: TextStyle(fontWeight: FontWeight.bold),
+            //         ),
+            //         Column(
+            //           children: [
+            //             Row(
+            //               children: [
+            //                 for (int i = 0;
+            //                     i < premiumBookCategoriesList.length;
+            //                     i++)
+            //                   InkWell(
+            //                     borderRadius: BorderRadius.circular(25),
+            //                     splashColor: Colors.blue,
+            //                     onTap: () {
+            //                       displayGenre(i);
+            //                       // print(premiumBookCategoriesList[i]);
+            //                     },
+            //                     child: Text(
+            //                       '${premiumBookCategoriesList[i]}    ',
+            //                       style: const TextStyle(
+            //                           fontWeight: FontWeight.bold),
+            //                     ),
+            //                   ),
+            //               ],
+            //             ),
+            //           ],
+            //         ),
+            //       ],
+            //     ),
+            //   ],
+            // )
+            else if (isDisplayGenre == true)
               Column(
                 children: [
                   Center(
@@ -242,14 +359,14 @@ class _PremiumBookState extends State<PremiumBook> {
   ///----------- details book
   String displayName = '';
   String displayImage = '';
-  int displayPrice = 0;
+  double displayPrice = 0;
   String name = '';
   String displayAuthor = '';
   String category = '';
   void premiumDetailsBook(int index) {
     setState(() {
       displayImage = '$coreUrl${premiumBook[index]?.imageNameF ?? 'No image'}';
-      displayPrice = premiumBook[index]?.price ?? 1;
+      displayPrice = (premiumBook[index]?.price ?? 0.0);
       name = premiumBook[index]?.authorName ?? 'Unknown';
       displayName = premiumBook[index]?.name ?? 'Unknown';
       displayAuthor = premiumBook[index]?.authorName ?? 'Unknown';
@@ -261,16 +378,16 @@ class _PremiumBookState extends State<PremiumBook> {
   ///-----Display Genre
 
   String genreImage = '';
-  int genrePrice = 0;
+  double genrePrice = 0;
   String genreBookType = '';
   void displayGenre(int index) {
     setState(() {
       if (premiumBookCategoriesList[index] ==
           premiumBook[index]!.bookCategories) {
         genreImage = '$coreUrl${premiumBook[index]?.imageNameF ?? 'No image'}';
-        genrePrice = premiumBook[index]?.price ?? 1;
+        genrePrice = (premiumBook[index]?.price ?? 0.0);
         genreBookType = premiumBookCategoriesList[index];
-        IsDisplayGenre = true;
+        isDisplayGenre = true;
       }
     });
   }

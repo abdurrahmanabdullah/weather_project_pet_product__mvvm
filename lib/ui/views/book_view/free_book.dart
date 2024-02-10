@@ -19,7 +19,7 @@ class _BookExtensionState extends State<BookExtension> {
   bool isFreeDetails = false;
   List<Free?> freeBook = [];
   List<String?> freeBookCategoriesList = [];
-  bool IsDisplayFreeGenre = false;
+  bool isDisplayFreeGenre = false;
   @override
   Widget build(BuildContext context) {
     return BaseView<BookViewModel>(
@@ -27,8 +27,8 @@ class _BookExtensionState extends State<BookExtension> {
         builder: (context, model, child) {
           freeBook = (model.book.isNotEmpty && model.book[0].output != null)
               ? model.book[0].output!
-                  .where((output) => output?.free != null)
-                  .map((output) => output?.free)
+                  .where((output) => output.free != null)
+                  .map((output) => output.free)
                   .toList()
               : [];
 
@@ -63,60 +63,53 @@ class _BookExtensionState extends State<BookExtension> {
                 children: [
                   Flexible(
                     child: GridView.builder(
-                      itemCount: freeBook.length,
+                      // itemCount: freeBook.length,
+                      itemCount: 10,
                       shrinkWrap: true,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
+                        crossAxisCount: 3,
                       ),
                       itemBuilder: (context, index) {
                         // Check if the necessary properties are not null before accessing them
                         String imageUrl =
-                            '$coreUrl${freeBook![index]!.imageNameF ?? 'No image'}';
+                            '$coreUrl${freeBook[index]!.imageNameF ?? 'No image'}';
 
                         // '$coreUrl${model.book?[0].output?[index].free?.imageNameF ?? 'No image'}';
-                        String authorName = freeBook![index]!.name ?? 'unknown';
+                        String authorName = freeBook[index]!.name ?? 'unknown';
 
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: InkWell(
-                            onTap: () {
-                              freeDetails(index);
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Expanded(
-                                  child: Image.network(
-                                    imageUrl,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      }
-                                      return const CircularProgressIndicator();
-                                    },
-                                    errorBuilder: (context, error, stackTrace) {
-                                      // Display an error message or placeholder image
-                                      return const Text('Error loading image');
-                                    },
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    authorName,
-                                    softWrap: true,
-                                    maxLines: 1,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Text(
-                                    model.book?[0].output?[index].free?.state ??
+                        return InkWell(
+                          onTap: () {
+                            freeDetails(index);
+                          },
+                          child: Card(
+                            child: Expanded(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Image.network(
+                                        imageUrl,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+                                          return const CircularProgressIndicator();
+                                        },
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          // Display an error message or placeholder image
+                                          return const Text(
+                                              'Error loading image');
+                                        },
+                                      ),
+                                    ),
+                                    Text(model.book[0].output?[index].free
+                                            ?.state ??
                                         'unknown'),
-                              ],
+                                  ]),
                             ),
                           ),
                         );
@@ -127,29 +120,40 @@ class _BookExtensionState extends State<BookExtension> {
               ),
 
               ///=====check if detailsBookFunction is called and isDisplayGenre is not true
-              if (isFreeDetails && IsDisplayFreeGenre != true)
+              if (isFreeDetails && isDisplayFreeGenre != true)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Column(
                       children: [
                         // if (displayImage.isNotEmpty)
-                        Image.network(
-                          freeDisplayImage,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            }
-                            return const CircularProgressIndicator();
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Text('Error loading image');
-                          },
+                        Card(
+                          child: Column(
+                            children: [
+                              Image.network(
+                                freeDisplayImage,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return const CircularProgressIndicator();
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Text('Error loading image');
+                                },
+                                width: 200,
+                                height: 200,
+                              ),
+                              Text(
+                                'Price ${freeDisplayPrice.toString()}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
-                        Text(
-                          'Price ${freeDisplayPrice.toString()}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
+
                         const SizedBox(
                           height: 15,
                         ),
@@ -167,58 +171,72 @@ class _BookExtensionState extends State<BookExtension> {
                             try {
                               await launch(playStoreUrl);
                             } catch (error) {
-                              print('Error launching URL: $error');
+                              // print('Error launching URL: $error');
                             }
                           },
                           child: const Text('Read More'),
                         ),
                       ],
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          freeDisplayName,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text('Author: $freeDisplayAuthor'),
-                        Text('Category: $freeCategory'),
-                        const Text(
-                          'Genre :',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Column(
+                    Expanded(
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
+                            Text(
+                              freeDisplayName,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text('Author: $freeDisplayAuthor'),
+                            Text('Category: $freeCategory'),
+                            const Text(
+                              'Genre :',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Column(
                               children: [
-                                for (int i = 0;
-                                    i < freeBookCategoriesList.length;
-                                    i++)
-                                  InkWell(
-                                    borderRadius: BorderRadius.circular(25),
-                                    splashColor: Colors.blue,
-                                    onTap: () {
-                                      displayFree(i);
-                                      // print(premiumBookCategoriesList[i]);
-                                    },
-                                    child: Text(
-                                      '${freeBookCategoriesList[i]}    ',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                                Column(children: [
+                                  for (int i = 0;
+                                      i < freeBookCategoriesList.length;
+                                      i++)
+                                    InkWell(
+                                      borderRadius: BorderRadius.circular(25),
+                                      splashColor: Colors.blue,
+                                      onTap: () {
+                                        displayFree(i);
+                                        // print(premiumBookCategoriesList[i]);
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.all(8.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 16),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black12,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          '${freeBookCategoriesList[i]}    ',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                ]),
                               ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 )
-              else if (IsDisplayFreeGenre == true)
+              else if (isDisplayFreeGenre == true)
                 Column(
                   children: [
                     Text(
@@ -282,7 +300,7 @@ class _BookExtensionState extends State<BookExtension> {
   ///-----------  free details book
   String freeDisplayName = '';
   String freeDisplayImage = '';
-  int freeDisplayPrice = 0;
+  double freeDisplayPrice = 0;
   String freeName = '';
   String freeDisplayAuthor = '';
   String freeCategory = '';
@@ -290,7 +308,7 @@ class _BookExtensionState extends State<BookExtension> {
   void freeDetails(int index) {
     setState(() {
       freeDisplayImage = '$coreUrl${freeBook[index]?.imageNameF ?? 'No image'}';
-      freeDisplayPrice = freeBook[index]?.price ?? 0;
+      freeDisplayPrice = freeBook[index]?.price ?? 0.0;
       freeName = freeBook[index]?.authorName ?? 'Unknown';
       freeDisplayName = freeBook[index]?.name ?? 'Unknown';
       freeDisplayAuthor = freeBook[index]?.authorName ?? 'Unknown';
@@ -302,7 +320,7 @@ class _BookExtensionState extends State<BookExtension> {
   ///-----Display Genre
 
   String genreImage = '';
-  int genrePrice = 0;
+  double genrePrice = 0;
   String genreBookType = '';
   String namee = '';
   List<String> genreImages = [];
@@ -316,7 +334,7 @@ class _BookExtensionState extends State<BookExtension> {
       for (Free? book in freeBook) {
         if (book?.bookCategories == targetGenre) {
           genreImage = '$coreUrl${book?.imageNameF ?? 'No image'}';
-          genrePrice = book?.price ?? 0;
+          genrePrice = book?.price ?? 0.0;
           String bookType = targetGenre ?? '';
           String name = book?.name ?? 'Unknown';
 
@@ -325,7 +343,7 @@ class _BookExtensionState extends State<BookExtension> {
         }
       }
 
-      IsDisplayFreeGenre = true;
+      isDisplayFreeGenre = true;
     });
   }
 }

@@ -14,7 +14,7 @@ class BookView extends StatefulWidget {
   State<BookView> createState() => _BookViewState();
 }
 
-enum Status { allBook, Free, premium }
+enum Status { allBook, free, premium }
 
 class _BookViewState extends State<BookView> {
   Status bookStatus = Status.allBook;
@@ -23,7 +23,7 @@ class _BookViewState extends State<BookView> {
       'https://api.hidayahbooks.hidayahsmart.solutions/static/book_cover/';
   final bool _isHovered = false;
   List<Premium?> premiumBook = [];
-  List<Free?> FreeBook = [];
+  List<Free?> freeBook = [];
 
   @override
   Widget build(BuildContext context) {
@@ -52,18 +52,21 @@ class _BookViewState extends State<BookView> {
                   ),
                 ),
                 const Spacer(),
-                Expanded(
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: 'Search...',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
+                // Expanded(
+                //   child: TextFormField(
+                //     decoration: const InputDecoration(
+                //       hintText: 'Search...',
+                //       border: OutlineInputBorder(),
+                //     ),
+                //   ),
+                // ),
                 IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
-                    // Add your search functionality here
+                    TextFormField(
+                        decoration: const InputDecoration(
+                      hintText: 'Search...',
+                    ));
                   },
                 ),
               ],
@@ -108,7 +111,7 @@ class _BookViewState extends State<BookView> {
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       foregroundColor: Colors.white,
-                                      backgroundColor: bookStatus == Status.Free
+                                      backgroundColor: bookStatus == Status.free
                                           ? Colors.black
                                           : Colors.blue,
                                       padding: const EdgeInsets.symmetric(
@@ -123,7 +126,7 @@ class _BookViewState extends State<BookView> {
                                     ),
                                     onPressed: () {
                                       setState(() {
-                                        bookStatus = Status.Free;
+                                        bookStatus = Status.free;
                                       });
                                     },
                                     child: const Text("Free books"),
@@ -169,7 +172,7 @@ class _BookViewState extends State<BookView> {
                                 ),
 
                               ///-------------------    ----free book
-                              if (bookStatus == Status.Free)
+                              if (bookStatus == Status.free)
                                 const BookExtension(),
                               //  ShowText = 'AllBook';
                               // if( ShowText =AllBook){}
@@ -179,36 +182,37 @@ class _BookViewState extends State<BookView> {
                             ],
                           )
                         : const Center(child: CircularProgressIndicator()),
-
-                    ///----------BotomNavigation
-                    BottomNavigationBar(
-                        backgroundColor: Colors.black12,
-                        items: const [
-                          BottomNavigationBarItem(
-                            icon: Icon(Icons.facebook),
-                            label: 'facebook',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: Icon(Icons.share),
-                            label: 'Twitter',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: Icon(Icons.camera_alt),
-                            label: 'Instagram',
-                          ),
-                        ]),
-                    const Positioned(
-                      // Adjust alignment as needed
-                      child: Text(
-                        '© 2023 Your Company. All rights reserved.',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )
                   ],
                 ),
+              ),
+            ),
+          ),
+
+          ///----------BotomNavigation
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.black12,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.facebook),
+                label: 'facebook',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.share),
+                label: 'Twitter',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.camera_alt),
+                label: 'Instagram',
+              ),
+            ],
+          ),
+          bottomSheet: const Positioned(
+            child: Text(
+              '© 2023 Your Company. All rights reserved.',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
